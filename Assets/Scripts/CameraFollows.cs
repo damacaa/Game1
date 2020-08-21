@@ -10,6 +10,8 @@ public class CameraFollows : MonoBehaviour
     public GameObject[] players;
     public int numberOfPlayers = 1;
 
+    public float speed;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,13 +35,13 @@ public class CameraFollows : MonoBehaviour
 
                 if (viewPos.x > 0.9F || viewPos.x < 0.1F || viewPos.y > 0.9F || viewPos.y < 0.1F)
                 {
-                    cam.orthographicSize += 0.2f;
+                    cam.orthographicSize += speed*Time.deltaTime;
                     
                 }else if (viewPos.x > 0.89F || viewPos.x < 0.11F || viewPos.y > 0.89F || viewPos.y < 0.11F) { allInViewport = false; }
             }
         }
 
-        if (allInViewport && cam.orthographicSize > 20) { cam.orthographicSize -= 0.1f; }
+        if (allInViewport && cam.orthographicSize > 20) { cam.orthographicSize -= speed * Time.deltaTime; }
 
 
 

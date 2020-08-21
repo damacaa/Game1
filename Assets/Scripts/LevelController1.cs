@@ -116,6 +116,10 @@ public class LevelController1 : LevelController
 
     public override void Shake()
     {
-        screenControls.SetActive(!screenControls.activeSelf); 
+    }
+
+    public void HideHud()
+    {
+        screenControls.SetActive(!screenControls.activeSelf);
     }
 }
