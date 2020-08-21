@@ -536,7 +536,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.2
+  near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -588,7 +588,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   numberOfPlayers: 1
-  speed: 50
+  speed: 30
 --- !u!1 &915239669
 GameObject:
   m_ObjectHideFlags: 0
