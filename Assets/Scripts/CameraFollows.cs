@@ -35,13 +35,13 @@ public class CameraFollows : MonoBehaviour
 
                 if (viewPos.x > 0.8F || viewPos.x < 0.2F || viewPos.y > 0.7F || viewPos.y < 0.3F)
                 {
-                    cam.orthographicSize += speed*Time.deltaTime;
+                    cam.orthographicSize += speed*Time.deltaTime * cam.orthographicSize;
                     
                 }else if (viewPos.x > 0.79F || viewPos.x < 0.21F || viewPos.y > 0.69F || viewPos.y < 0.31F) { allInViewport = false; }
             }
         }
 
-        if (allInViewport && cam.orthographicSize > 20) { cam.orthographicSize -= speed * Time.deltaTime; }
+        if (allInViewport && cam.orthographicSize > 20) { cam.orthographicSize -= speed * Time.deltaTime * cam.orthographicSize; }
 
 
 
