@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.InputSystem;
 
 public class LevelController1 : LevelController
@@ -37,6 +38,7 @@ public class LevelController1 : LevelController
     {
         Screen.orientation = ScreenOrientation.Portrait;
         AllowScreenRotation(false);
+        AndroidDevice.SetSustainedPerformanceMode(true);
 
         camF = cam.GetComponent<CameraFollows>();
         camF.numberOfPlayers = 2;
@@ -76,13 +78,13 @@ public class LevelController1 : LevelController
         {
             p1.Move(move1);
 
-            bool inside = Vector3.Distance(p1.transform.position, Vector3.zero) < 2*range;
+            bool inside = Vector3.Distance(p1.transform.position, Vector3.zero) < 2 * range;
 
-            if(!inside) { p1.Die(); }
+            if (!inside) { p1.Die(); }
         }
         else
         {
-            GameObject newPlayer = GameObject.Instantiate(prefab, new Vector3(UnityEngine.Random.Range(-range,range), UnityEngine.Random.Range(-range, range), 0), Quaternion.identity);
+            GameObject newPlayer = GameObject.Instantiate(prefab, new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0), Quaternion.identity);
             newPlayer.layer = 8;
             newPlayer.name = "Dani";
             p1 = newPlayer.GetComponent<PlayerController>();
