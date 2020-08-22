@@ -9,9 +9,8 @@ public class PlayerController : MonoBehaviour
     public BallController ball;
     public float friction;
     public GameObject explosionPrefab;
-
     public LayerMask layerMask;
-
+    public float ropeLength;
 
     Vector2 speedAcuumulated = Vector2.zero;
 
@@ -30,6 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         timeToPlay = Time.time + waitToPlay;
         charge = 0;
+        ball.GetComponent<BallController>().r = ropeLength;
     }
 
     // Update is called once per frame
@@ -113,5 +113,11 @@ public class PlayerController : MonoBehaviour
             ball.Boost();
             nextTime = Time.time + wait;
         }
+    }
+
+    public void SetRopeLength(float r)
+    {
+        ropeLength = r;
+        ball.GetComponent<BallController>().r = r;
     }
 }

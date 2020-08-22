@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.SceneManagement;
 
 public abstract class LevelController : MonoBehaviour
@@ -50,7 +51,7 @@ public abstract class LevelController : MonoBehaviour
         }
     }
 
-protected void ReloadScene()
+public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -67,8 +68,8 @@ protected void ReloadScene()
         if (b) { Cursor.lockState = CursorLockMode.None; } else { Cursor.lockState = CursorLockMode.Locked; }
     }
 
-
-    public abstract void Shake();
-
-
+    protected void SetAndroidPerformance()
+    {
+        AndroidDevice.SetSustainedPerformanceMode(true);
+    }
 }

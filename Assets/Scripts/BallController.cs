@@ -6,6 +6,7 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     public float r;
+    float defaultR;
     public float w;
     public Transform parent;
 
@@ -33,7 +34,12 @@ public class BallController : MonoBehaviour
         transform.localPosition += 0.1f * (newPos - transform.localPosition);
         phi += w * Time.deltaTime;
 
+        
+    }
 
+    private void Start()
+    {
+        defaultR = r;
     }
 
     // Update is called once per frame
@@ -62,7 +68,7 @@ public class BallController : MonoBehaviour
                 gameObject.transform.parent = parent;
                 canBoost = true;
                 waiting = false;
-                r = 5;
+                r = defaultR;
             }
             else
             {
@@ -97,7 +103,7 @@ public class BallController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.tag == "Player")
+        if (collision.transform.tag == "Player")// && collision.transform.parent.ToString() == parent.ToString()
         {
             waiting = true;
             accelerating = false;

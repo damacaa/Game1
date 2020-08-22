@@ -435,7 +435,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 256
+  ropeLength: 15
   waitToPlay: 0.5
+  wait: 1.5
 --- !u!114 &2228436939558640775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,7 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceb702269c3c62746bc9db2063126419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  r: 5
+  r: 15
   w: 3
   parent: {fileID: 5116524738244060129}
   wait: 1

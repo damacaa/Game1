@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Android;
 using UnityEngine.InputSystem;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class LevelController1 : LevelController
 {
@@ -12,18 +12,27 @@ public class LevelController1 : LevelController
     CameraFollows camF;
 
     public GameObject screenControls;
+    public GameObject endUI;
+    public GameObject gameplayUI;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI ropeLengthText;
+    public TextMeshProUGUI targetPointsText;
+    public TextMeshProUGUI winText;
 
-    public GameObject prefab;
+    public GameObject playerPrefab;
 
     public LayerMask playerLayer;
     public LayerMask enemyLayer;
 
-    public TextMeshProUGUI text;
+    
 
     public int range;
+    public int ropeLength;
+    public int targetPoints;
 
-    public PlayerController p1;
-    public PlayerController p2;
+
+    PlayerController p1;
+    PlayerController p2;
 
     PlayerControls controls;
     Vector2 move1;
@@ -32,13 +41,15 @@ public class LevelController1 : LevelController
     int points1 = -1;
     int points2 = -1;
 
+    bool started;
+
 
     // Start is called before the first frame update
     void Awake()
     {
         Screen.orientation = ScreenOrientation.Portrait;
         AllowScreenRotation(false);
-        AndroidDevice.SetSustainedPerformanceMode(true);
+        SetAndroidPerformance();
 
         camF = cam.GetComponent<CameraFollows>();
         camF.numberOfPlayers = 2;
@@ -64,55 +75,80 @@ public class LevelController1 : LevelController
         controls.Player2.MoveKeyboard1.performed += ctx => move2 = ctx.ReadValue<Vector2>();
         controls.Player2.MoveKeyboard1.canceled += ctx => move2 = Vector2.zero;
 
+        ropeLengthText.text = ropeLength.ToString();
+        targetPointsText.text = targetPoints.ToString();
     }
 
-    private void Start()
+    public void StartGame()
     {
-
+        started = true;
+        ropeLengthText.text = ropeLength.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (p1)
+        if (started)
         {
-            p1.Move(move1);
+            if (p1)
+            {
+                p1.Move(move1);
 
-            bool inside = Vector3.Distance(p1.transform.position, Vector3.zero) < 2 * range;
+                bool inside = Vector3.Distance(p1.transform.position, Vector3.zero) < 2 * range;
 
-            if (!inside) { p1.Die(); }
+                if (!inside) { p1.Die(); }
+            }
+            else
+            {
+                points2++;
+                if (points2 >= targetPoints)
+                {
+                    End();
+                }
+                else {
+                    GameObject newPlayer = GameObject.Instantiate(playerPrefab, new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0), Quaternion.identity);
+                    newPlayer.layer = 8;
+                    newPlayer.name = "Dani";
+                    p1 = newPlayer.GetComponent<PlayerController>();
+                    p1.layerMask = enemyLayer;
+                    p1.SetRopeLength(ropeLength);
+                    camF.players[0] = newPlayer;
+                }
+                
+                
+            }
+
+            if (p2)
+            {
+                p2.Move(move2);
+
+                bool inside = Vector3.Distance(p2.transform.position, Vector3.zero) < 2 * range;
+
+                if (!inside) { p2.Die(); }
+            }
+            else
+            {
+                
+                points1++;
+                
+
+                if (points1 >= targetPoints)
+                {
+                    End();
+                }
+                else {
+                    GameObject newPlayer = GameObject.Instantiate(playerPrefab, new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0), Quaternion.identity);
+                    newPlayer.layer = 9;
+                    newPlayer.name = "Juanje";
+                    p2 = newPlayer.GetComponent<PlayerController>();
+                    p2.layerMask = playerLayer;
+                    p2.SetRopeLength(ropeLength);
+                    camF.players[1] = newPlayer;
+                }
+            }
+
+            scoreText.text = points1 + ":" + points2;
         }
-        else
-        {
-            GameObject newPlayer = GameObject.Instantiate(prefab, new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0), Quaternion.identity);
-            newPlayer.layer = 8;
-            newPlayer.name = "Dani";
-            p1 = newPlayer.GetComponent<PlayerController>();
-            p1.layerMask = enemyLayer;
-            points2++;
-            camF.players[0] = newPlayer;
-        }
-
-        if (p2)
-        {
-            p2.Move(move2);
-
-            bool inside = Vector3.Distance(p2.transform.position, Vector3.zero) < 2 * range;
-
-            if (!inside) { p2.Die(); }
-        }
-        else
-        {
-            GameObject newPlayer = GameObject.Instantiate(prefab, new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0), Quaternion.identity);
-            newPlayer.layer = 9;
-            newPlayer.name = "Juanje";
-            p2 = newPlayer.GetComponent<PlayerController>();
-            p2.layerMask = playerLayer;
-            points1++;
-            camF.players[1] = newPlayer;
-        }
-
-        text.text = points1 + ":" + points2;
     }
 
     private void OnEnable()
@@ -127,12 +163,43 @@ public class LevelController1 : LevelController
         controls.Player2.Disable();
     }
 
-    public override void Shake()
-    {
-    }
-
     public void HideHud()
     {
         screenControls.SetActive(!screenControls.activeSelf);
+    }
+
+    void End()
+    {
+        gameplayUI.SetActive(false);
+        endUI.SetActive(true);
+        started = false;
+        gameObject.GetComponent<AudioSource>().loop = false;
+
+        if(points2 > points1)
+        {
+            winText.gameObject.transform.Rotate(180*Vector3.forward);
+        }
+    }
+
+    public void IncreaseRopeLength()
+    {
+        ropeLength += 1;
+        ropeLengthText.text = ropeLength.ToString();
+    }
+    public void DecreaseRopeLength()
+    {
+        ropeLength -= 1;
+        ropeLengthText.text = ropeLength.ToString();
+    }
+
+    public void IncreaseTargetPoints()
+    {
+        targetPoints++;
+        targetPointsText.text = targetPoints.ToString();
+    }
+    public void DecreaseTargetPoints()
+    {
+        targetPoints--;
+        targetPointsText.text = targetPoints.ToString();
     }
 }
