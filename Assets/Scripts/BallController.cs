@@ -13,6 +13,8 @@ public class BallController : MonoBehaviour
     bool accelerating;
     bool canBoost;
     bool waiting;
+    bool charging;
+
 
     float nextTime;
     public float wait = 1.5f;
@@ -30,18 +32,23 @@ public class BallController : MonoBehaviour
         Vector3 newPos = new Vector3(r * Mathf.Cos(phi), r * Mathf.Sin(phi), 0);
         transform.localPosition += 0.1f * (newPos - transform.localPosition);
         phi += w * Time.deltaTime;
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(phi >= 2 * Mathf.PI)
+        if (phi >= 2 * Mathf.PI)
         {
             phi = 0;
         }
 
+        if (charging) {
+            Debug.Log("Cargando");
 
-        if (accelerating)
+        }
+        else if (accelerating)
         {
 
             r = 0;
@@ -70,14 +77,22 @@ public class BallController : MonoBehaviour
         }
     }
 
-    public void Boost()
+    public bool Charge()
     {
         if (canBoost)
         {
-            accelerating = true;
-            canBoost = false;
-            waiting = false;
+            charging = true;
         }
+
+        return canBoost;
+    }
+    public void Boost()
+    {
+        charging = false;
+        accelerating = true;
+        canBoost = false;
+        waiting = false;
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

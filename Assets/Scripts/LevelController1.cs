@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -42,7 +43,9 @@ public class LevelController1 : LevelController
 
         controls = new PlayerControls();
 
-        controls.Player1.Boost1.performed += ctx => p1.Boost();
+        controls.Player1.Boost1.started += ctx => p1.Charge();
+        controls.Player1.Boost1.canceled += ctx => p1.Boost();
+
 
         controls.Player1.MoveJoystick1.performed += ctx => move1 = ctx.ReadValue<Vector2>();
         controls.Player1.MoveJoystick1.canceled += ctx => move1 = Vector2.zero;
@@ -50,7 +53,8 @@ public class LevelController1 : LevelController
         controls.Player1.MoveKeyboard1.performed += ctx => move1 = ctx.ReadValue<Vector2>();
         controls.Player1.MoveKeyboard1.canceled += ctx => move1 = Vector2.zero;
 
-        controls.Player2.Boost1.performed += ctx => p2.Boost();
+        controls.Player2.Boost1.started += ctx => p2.Charge();
+        controls.Player2.Boost1.canceled += ctx => p2.Boost();
 
         controls.Player2.MoveJoystick1.performed += ctx => move2 = ctx.ReadValue<Vector2>();
         controls.Player2.MoveJoystick1.canceled += ctx => move2 = Vector2.zero;
@@ -58,7 +62,6 @@ public class LevelController1 : LevelController
         controls.Player2.MoveKeyboard1.performed += ctx => move2 = ctx.ReadValue<Vector2>();
         controls.Player2.MoveKeyboard1.canceled += ctx => move2 = Vector2.zero;
 
-        
     }
 
     private void Start()
@@ -72,6 +75,10 @@ public class LevelController1 : LevelController
         if (p1)
         {
             p1.Move(move1);
+
+            bool inside = Vector3.Distance(p1.transform.position, Vector3.zero) < 2*range;
+
+            if(!inside) { p1.Die(); }
         }
         else
         {
@@ -87,6 +94,10 @@ public class LevelController1 : LevelController
         if (p2)
         {
             p2.Move(move2);
+
+            bool inside = Vector3.Distance(p2.transform.position, Vector3.zero) < 2 * range;
+
+            if (!inside) { p2.Die(); }
         }
         else
         {

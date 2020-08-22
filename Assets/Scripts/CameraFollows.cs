@@ -33,11 +33,11 @@ public class CameraFollows : MonoBehaviour
                 newPos += players[i].transform.position;
                 Vector2 viewPos = cam.WorldToViewportPoint(players[i].transform.position);
 
-                if (viewPos.x > 0.9F || viewPos.x < 0.1F || viewPos.y > 0.9F || viewPos.y < 0.1F)
+                if (viewPos.x > 0.8F || viewPos.x < 0.2F || viewPos.y > 0.7F || viewPos.y < 0.3F)
                 {
                     cam.orthographicSize += speed*Time.deltaTime;
                     
-                }else if (viewPos.x > 0.89F || viewPos.x < 0.11F || viewPos.y > 0.89F || viewPos.y < 0.11F) { allInViewport = false; }
+                }else if (viewPos.x > 0.79F || viewPos.x < 0.21F || viewPos.y > 0.69F || viewPos.y < 0.31F) { allInViewport = false; }
             }
         }
 

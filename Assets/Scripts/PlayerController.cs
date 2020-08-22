@@ -18,16 +18,25 @@ public class PlayerController : MonoBehaviour
     float timeToPlay;
     public float waitToPlay;
 
+    float maxChargeTime;
+    bool charging;
+    float charge;
+
+    float nextTime;
+    public float wait = 1.5f;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         timeToPlay = Time.time + waitToPlay;
+        charge = 0;
     }
 
     // Update is called once per frame
     public void Move(Vector2 speedInput)
     {
         speedInput *= speed * Time.deltaTime;
+
         transform.Translate(speedInput);
     }
 
@@ -44,7 +53,19 @@ public class PlayerController : MonoBehaviour
             //Debug.Log(hit.collider.gameObject.name);
         }
 
-        Debug.DrawRay(transform.position, ropeVector, Color.yellow);
+        if (charging)
+        {
+            if (Time.time > maxChargeTime)
+            {
+                Boost();
+            }
+            else
+            {
+                charge += Time.deltaTime;
+            }
+        }
+
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -55,11 +76,13 @@ public class PlayerController : MonoBehaviour
 
             Vector2 distance = gameObject.transform.position - collision.transform.position;
 
-            gameObject.GetComponent<Rigidbody2D>().AddForce(distance.normalized * 3000);
+            gameObject.GetComponent<Rigidbody2D>().AddForce(distance.normalized * 5000 * charge);
+
+            charge = 0;
         }
     }
 
-    void Die()
+    public void Die()
     {
         /*while (gameObject.transform.childCount != 0)
         {
@@ -67,12 +90,28 @@ public class PlayerController : MonoBehaviour
         }*/
         Destroy(ball.gameObject);
         Destroy(gameObject);
-        Instantiate(explosionPrefab,gameObject.transform.position, Quaternion.identity);
+        Instantiate(explosionPrefab, gameObject.transform.position, Quaternion.identity);
+    }
+
+    public void Charge()
+    {
+        if (!charging)
+        {
+            charging = ball.Charge();
+            
+            maxChargeTime = Time.time + 1f;
+        }
     }
 
     public void Boost()
     {
-        gameObject.GetComponent<AudioSource>().Play();
+        if (charging && Time.time > nextTime)
+        {
+            Debug.Log(charge);
+            charging = false;
+            gameObject.GetComponent<AudioSource>().Play();
             ball.Boost();
+            nextTime = Time.time + wait;
+        }
     }
 }
