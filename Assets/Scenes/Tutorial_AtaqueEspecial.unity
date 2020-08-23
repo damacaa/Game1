@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -696,7 +696,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -242}
+  m_AnchoredPosition: {x: 0, y: -330.99982}
   m_SizeDelta: {x: 300, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &712677769
@@ -1132,7 +1132,7 @@ GameObject:
   - component: {fileID: 1166034949}
   - component: {fileID: 1166034948}
   m_Layer: 5
-  m_Name: VideoAtaque
+  m_Name: VideoAtaqueEspecial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1154,8 +1154,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015259, y: -31}
-  m_SizeDelta: {x: 404.33813, y: 404.33813}
+  m_AnchoredPosition: {x: 0.000030518, y: -48.407}
+  m_SizeDelta: {x: 499.1515, y: 443.72028}
   m_Pivot: {x: 0.5, y: 0.557993}
 --- !u!328 &1166034948
 VideoPlayer:
