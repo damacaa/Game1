@@ -7,6 +7,9 @@ public class CameraFollows : MonoBehaviour
 
     Camera cam;
 
+    public float minSize;
+    public float maxSize;
+
     public GameObject[] players;
     public int numberOfPlayers = 1;
 
@@ -41,7 +44,7 @@ public class CameraFollows : MonoBehaviour
             }
         }
 
-        if (allInViewport && cam.orthographicSize > 20) { cam.orthographicSize -= speed * Time.deltaTime * cam.orthographicSize; }
+        if (allInViewport && cam.orthographicSize > minSize) { cam.orthographicSize -= speed * Time.deltaTime * cam.orthographicSize; }
 
 
 

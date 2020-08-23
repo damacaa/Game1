@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
@@ -10,6 +11,9 @@ public class LevelController1 : LevelController
 {
     public Camera cam;
     CameraFollows camF;
+
+    public LineRenderer line;
+
 
     public GameObject screenControls;
     public GameObject endUI;
@@ -24,9 +28,12 @@ public class LevelController1 : LevelController
     public LayerMask playerLayer;
     public LayerMask enemyLayer;
 
+
+
     
 
     public int range;
+    int lastRange;
     public int ropeLength;
     public int targetPoints;
 
@@ -83,6 +90,23 @@ public class LevelController1 : LevelController
     {
         started = true;
         ropeLengthText.text = ropeLength.ToString();
+        lastRange = range;
+
+        line.enabled = true;
+        DrawTheCircle();
+    }
+
+    private void DrawTheCircle()
+    {
+        int i = 0;
+        Vector3 newPos;
+        for (float phi = 0; phi <= 2 * Mathf.PI; phi += 0.1f)
+        {
+            newPos = new Vector3(2 * range * Mathf.Cos(phi), 2 * range * Mathf.Sin(phi), 0);
+
+            line.SetPosition(i, newPos);
+            i++;
+        }
     }
 
     // Update is called once per frame
@@ -148,6 +172,12 @@ public class LevelController1 : LevelController
             }
 
             scoreText.text = points1 + ":" + points2;
+        }
+
+        if(lastRange != range)
+        {
+            DrawTheCircle();
+            lastRange = range;
         }
     }
 

@@ -20,6 +20,7 @@ public class BallController : MonoBehaviour
     float nextTime;
     public float wait = 1.5f;
 
+
     Vector2 globalPosition;
 
     // Start is called before the first frame update
@@ -45,6 +46,7 @@ public class BallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (phi >= 2 * Mathf.PI)
         {
             phi = 0;
