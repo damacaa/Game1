@@ -108,6 +108,8 @@ public class LevelController1 : LevelController
             line.SetPosition(i, newPos);
             i++;
         }
+
+        //line.SetPosition(i, new Vector3(2*range,0,0));
     }
 
     // Update is called once per frame
