@@ -100,9 +100,10 @@ public class LevelController1 : LevelController
     {
         int i = 0;
         Vector3 newPos;
+        float localRange = range + (line.startWidth/4);
         for (float phi = 0; phi <= 2 * Mathf.PI; phi += 0.1f)
         {
-            newPos = new Vector3(2 * range * Mathf.Cos(phi), 2 * range * Mathf.Sin(phi), 0);
+            newPos = new Vector3(2 * localRange * Mathf.Cos(phi), 2 * localRange * Mathf.Sin(phi), 0);
 
             line.SetPosition(i, newPos);
             i++;
