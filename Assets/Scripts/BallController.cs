@@ -67,10 +67,7 @@ public class BallController : MonoBehaviour
         {
             if (Time.time > nextTime)
             {
-                gameObject.transform.parent = parent;
-                canBoost = true;
-                waiting = false;
-                r = defaultR;
+                Reset();
             }
             else
             {
@@ -112,5 +109,13 @@ public class BallController : MonoBehaviour
             nextTime = Time.time + wait;
             gameObject.transform.parent = null;
         }
+    }
+
+    public void Reset()
+    {
+        gameObject.transform.parent = parent;
+        canBoost = true;
+        waiting = false;
+        r = defaultR;
     }
 }

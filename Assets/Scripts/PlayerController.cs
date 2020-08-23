@@ -120,4 +120,10 @@ public class PlayerController : MonoBehaviour
         ropeLength = r;
         ball.GetComponent<BallController>().r = r;
     }
+
+    public void ResetBall()
+    {
+        ball.Reset();
+        gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    }
 }
