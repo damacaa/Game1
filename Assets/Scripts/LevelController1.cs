@@ -24,6 +24,7 @@ public class LevelController1 : LevelController
     public TextMeshProUGUI winText;
 
     public GameObject playerPrefab;
+    public GameObject playerPrefab2;
 
     public LayerMask playerLayer;
     public LayerMask enemyLayer;
@@ -56,7 +57,7 @@ public class LevelController1 : LevelController
     {
         Screen.orientation = ScreenOrientation.Portrait;
         AllowScreenRotation(false);
-        SetAndroidPerformance();
+        //SetAndroidPerformance();
 
         camF = cam.GetComponent<CameraFollows>();
         camF.numberOfPlayers = 2;
@@ -110,7 +111,7 @@ public class LevelController1 : LevelController
             i++;
         }
 
-        Debug.Log(i);
+        //Debug.Log(i);
 
         //DrawPolygon(50,range + (line.startWidth / 4), Vector3.zero);
     }
@@ -137,6 +138,8 @@ public class LevelController1 : LevelController
     // Update is called once per frame
     void Update()
     {
+        bool reset = false;
+
         if (started)
         {
             if (p1)
@@ -149,6 +152,7 @@ public class LevelController1 : LevelController
             }
             else
             {
+                //p1 is dead an I have to spawn him
                 points2++;
                 if (points2 >= targetPoints)
                 {
@@ -156,32 +160,32 @@ public class LevelController1 : LevelController
                 }
                 else
                 {
-                    Vector3 randomPos;
+                    /*Vector3 randomPos;
                     if (p2)
                     {
                         do
                         {
                             randomPos = new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0);
                         } while (Vector3.Distance(randomPos, p2.transform.position) < range * 0.9f);
+                        p2.transform.position = new Vector3(0, range / 2, 0);
+                        //p2.ResetBall();
                     }
                     else
                     {
                         randomPos = new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0);
-                    }
+                    }*/
 
-                    GameObject newPlayer = GameObject.Instantiate(playerPrefab, randomPos, Quaternion.identity);
+                    GameObject newPlayer = GameObject.Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
                     newPlayer.layer = 8;
                     newPlayer.name = "Dani";
                     p1 = newPlayer.GetComponent<PlayerController>();
                     p1.layerMask = enemyLayer;
                     p1.SetRopeLength(ropeLength);
                     camF.players[0] = newPlayer;
-                    range = defaultRange;
 
-                    p1.transform.position = new Vector3(0, -range / 2, 0);
-                    p2.transform.position = new Vector3(0, range / 2, 0);
 
-                    p2.ResetBall();
+                    reset = true;
+                    //p2.ResetBall();
 
                 }
 
@@ -208,36 +212,48 @@ public class LevelController1 : LevelController
                 }
                 else
                 {
-                    Vector3 randomPos;
+                    /*Vector3 randomPos;
                     if (p1)
                     {
                         do
                         {
                             randomPos = new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0);
                         } while (Vector3.Distance(randomPos, p1.transform.position) < range * 0.9f);
+                        p1.transform.position = new Vector3(0, -range / 2, 0);
+                        
                     }
                     else
                     {
                         randomPos = new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0);
-                    }
+                    }*/
 
-                    GameObject newPlayer = GameObject.Instantiate(playerPrefab, randomPos, Quaternion.identity); newPlayer.layer = 9;
+                    GameObject newPlayer = GameObject.Instantiate(playerPrefab2, Vector3.zero, Quaternion.identity); newPlayer.layer = 9; //randomPos
                     newPlayer.name = "Juanje";
                     p2 = newPlayer.GetComponent<PlayerController>();
                     p2.layerMask = playerLayer;
                     p2.SetRopeLength(ropeLength);
                     camF.players[1] = newPlayer;
-                    range = defaultRange;
 
-                    p1.transform.position = new Vector3(0, -range / 2, 0);
-                    p2.transform.position = new Vector3(0, range / 2, 0);
 
-                    p1.ResetBall();
+                    //p1.ResetBall();
+                    reset = true;
                 }
             }
 
             scoreText.text = points1 + ":" + points2;
             range -= Time.deltaTime;
+        }
+
+        if (reset)
+        {
+            p2.ResetBall();
+            p2.transform.position = new Vector3(0, range / 2, 0);
+
+            p1.ResetBall();
+            p1.transform.position = new Vector3(0, -range / 2, 0);
+
+            range = defaultRange;
+
         }
 
 

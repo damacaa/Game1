@@ -446,6 +446,8 @@ MonoBehaviour:
   winText: {fileID: 1378623326}
   playerPrefab: {fileID: 5116524738244060132, guid: d2641ea9f367800498670f61d24ea6c2,
     type: 3}
+  playerPrefab2: {fileID: 5116524738244060132, guid: 57324c8cc8bd18e44ab18c8bd28e27b4,
+    type: 3}
   playerLayer:
     serializedVersion: 2
     m_Bits: 256
