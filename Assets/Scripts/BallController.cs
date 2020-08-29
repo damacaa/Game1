@@ -6,19 +6,20 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     public float r;
-    float defaultR;
+    public float defaultR;
     public float w;
     public Transform parent;
 
     float phi;
-    bool accelerating;
-    bool canBoost;
-    bool waiting;
-    bool charging;
+    public bool accelerating;
+    public bool canBoost;
+    public bool waiting;
+    public bool charging;
 
 
     float nextTime;
     public float wait = 1.5f;
+
 
     Vector2 globalPosition;
 
@@ -34,17 +35,22 @@ public class BallController : MonoBehaviour
         transform.localPosition += 0.1f * (newPos - transform.localPosition);
         phi += w * Time.deltaTime;
 
-        
+        //Debug.Log("Awake: " + r);
     }
 
     private void Start()
     {
-        defaultR = r;
+        //r = 10;
+        r = defaultR;
+        
+        //Debug.Log("Start: " + r);
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (phi >= 2 * Mathf.PI)
         {
             phi = 0;
@@ -52,11 +58,9 @@ public class BallController : MonoBehaviour
 
         if (charging) {
             Debug.Log("Cargando");
-
         }
         else if (accelerating)
         {
-
             r = 0;
             gameObject.transform.Translate((parent.position - transform.position) * 0.1f);
 
@@ -65,10 +69,7 @@ public class BallController : MonoBehaviour
         {
             if (Time.time > nextTime)
             {
-                gameObject.transform.parent = parent;
-                canBoost = true;
-                waiting = false;
-                r = defaultR;
+                Reset();
             }
             else
             {
@@ -110,5 +111,16 @@ public class BallController : MonoBehaviour
             nextTime = Time.time + wait;
             gameObject.transform.parent = null;
         }
+    }
+
+    public void Reset()
+    {
+        gameObject.transform.parent = parent;
+        canBoost = true;
+        waiting = false;
+        accelerating = false;
+        charging = false;
+        r = defaultR;
+        nextTime = 0;
     }
 }

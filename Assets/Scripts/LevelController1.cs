@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
@@ -11,6 +12,9 @@ public class LevelController1 : LevelController
     public Camera cam;
     CameraFollows camF;
 
+    public LineRenderer line;
+
+
     public GameObject screenControls;
     public GameObject endUI;
     public GameObject gameplayUI;
@@ -20,13 +24,17 @@ public class LevelController1 : LevelController
     public TextMeshProUGUI winText;
 
     public GameObject playerPrefab;
+    public GameObject playerPrefab2;
 
     public LayerMask playerLayer;
     public LayerMask enemyLayer;
 
-    
 
-    public int range;
+
+
+    public float defaultRange;
+    float range;
+    float lastRange;
     public int ropeLength;
     public int targetPoints;
 
@@ -49,7 +57,7 @@ public class LevelController1 : LevelController
     {
         Screen.orientation = ScreenOrientation.Portrait;
         AllowScreenRotation(false);
-        SetAndroidPerformance();
+        //SetAndroidPerformance();
 
         camF = cam.GetComponent<CameraFollows>();
         camF.numberOfPlayers = 2;
@@ -83,11 +91,55 @@ public class LevelController1 : LevelController
     {
         started = true;
         ropeLengthText.text = ropeLength.ToString();
+        range = defaultRange;
+        lastRange = range;
+
+        line.enabled = true;
+        DrawTheCircle();
+    }
+
+    private void DrawTheCircle()
+    {
+        int i = 0;
+        Vector3 newPos;
+        float localRange = range + (line.startWidth / 4);
+        for (float phi = 0; phi <= 2 * Mathf.PI; phi += Mathf.PI / 30)
+        {
+            newPos = new Vector3(2 * localRange * Mathf.Cos(phi), 2 * localRange * Mathf.Sin(phi), 0);
+
+            line.SetPosition(i, newPos);
+            i++;
+        }
+
+        //Debug.Log(i);
+
+        //DrawPolygon(50,range + (line.startWidth / 4), Vector3.zero);
+    }
+
+    void DrawPolygon(int vertexNumber, float radius, Vector3 centerPos)
+    {
+
+        line.loop = true;
+        float angle = 2 * Mathf.PI / vertexNumber;
+        line.positionCount = vertexNumber;
+
+        for (int i = 0; i < vertexNumber; i++)
+        {
+            Matrix4x4 rotationMatrix = new Matrix4x4(new Vector4(Mathf.Cos(angle * i), Mathf.Sin(angle * i), 0, 0),
+                                                     new Vector4(-1 * Mathf.Sin(angle * i), Mathf.Cos(angle * i), 0, 0),
+                                       new Vector4(0, 0, 1, 0),
+                                       new Vector4(0, 0, 0, 1));
+            Vector3 initialRelativePosition = new Vector3(0, radius, 0);
+            line.SetPosition(i, centerPos + rotationMatrix.MultiplyPoint(initialRelativePosition));
+
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        bool reset = false;
+
         if (started)
         {
             if (p1)
@@ -100,22 +152,44 @@ public class LevelController1 : LevelController
             }
             else
             {
+                //p1 is dead an I have to spawn him
                 points2++;
                 if (points2 >= targetPoints)
                 {
                     End();
                 }
-                else {
-                    GameObject newPlayer = GameObject.Instantiate(playerPrefab, new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0), Quaternion.identity);
+                else
+                {
+                    /*Vector3 randomPos;
+                    if (p2)
+                    {
+                        do
+                        {
+                            randomPos = new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0);
+                        } while (Vector3.Distance(randomPos, p2.transform.position) < range * 0.9f);
+                        p2.transform.position = new Vector3(0, range / 2, 0);
+                        //p2.ResetBall();
+                    }
+                    else
+                    {
+                        randomPos = new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0);
+                    }*/
+
+                    GameObject newPlayer = GameObject.Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
                     newPlayer.layer = 8;
                     newPlayer.name = "Dani";
                     p1 = newPlayer.GetComponent<PlayerController>();
                     p1.layerMask = enemyLayer;
                     p1.SetRopeLength(ropeLength);
                     camF.players[0] = newPlayer;
+
+
+                    reset = true;
+                    //p2.ResetBall();
+
                 }
-                
-                
+
+
             }
 
             if (p2)
@@ -128,26 +202,65 @@ public class LevelController1 : LevelController
             }
             else
             {
-                
+
                 points1++;
-                
+
 
                 if (points1 >= targetPoints)
                 {
                     End();
                 }
-                else {
-                    GameObject newPlayer = GameObject.Instantiate(playerPrefab, new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0), Quaternion.identity);
-                    newPlayer.layer = 9;
+                else
+                {
+                    /*Vector3 randomPos;
+                    if (p1)
+                    {
+                        do
+                        {
+                            randomPos = new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0);
+                        } while (Vector3.Distance(randomPos, p1.transform.position) < range * 0.9f);
+                        p1.transform.position = new Vector3(0, -range / 2, 0);
+                        
+                    }
+                    else
+                    {
+                        randomPos = new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 0);
+                    }*/
+
+                    GameObject newPlayer = GameObject.Instantiate(playerPrefab2, Vector3.zero, Quaternion.identity); newPlayer.layer = 9; //randomPos
                     newPlayer.name = "Juanje";
                     p2 = newPlayer.GetComponent<PlayerController>();
                     p2.layerMask = playerLayer;
                     p2.SetRopeLength(ropeLength);
                     camF.players[1] = newPlayer;
+
+
+                    //p1.ResetBall();
+                    reset = true;
                 }
             }
 
             scoreText.text = points1 + ":" + points2;
+            range -= Time.deltaTime;
+        }
+
+        if (reset)
+        {
+            p2.ResetBall();
+            p2.transform.position = new Vector3(0, range / 2, 0);
+
+            p1.ResetBall();
+            p1.transform.position = new Vector3(0, -range / 2, 0);
+
+            range = defaultRange;
+
+        }
+
+
+        if (lastRange != range)
+        {
+            DrawTheCircle();
+            lastRange = range;
         }
     }
 
@@ -175,9 +288,9 @@ public class LevelController1 : LevelController
         started = false;
         gameObject.GetComponent<AudioSource>().loop = false;
 
-        if(points2 > points1)
+        if (points2 > points1)
         {
-            winText.gameObject.transform.Rotate(180*Vector3.forward);
+            winText.gameObject.transform.Rotate(180 * Vector3.forward);
         }
     }
 

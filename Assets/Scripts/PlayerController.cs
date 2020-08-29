@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         timeToPlay = Time.time + waitToPlay;
         charge = 0;
-        ball.GetComponent<BallController>().r = ropeLength;
+        SetRopeLength(ropeLength);
     }
 
     // Update is called once per frame
@@ -72,8 +72,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.transform.tag == "Ball" && collision.gameObject.GetComponent<BallController>().parent.transform == gameObject.transform && Time.time > timeToPlay)
         {
-            Debug.Log("Colision");
-
             Vector2 distance = gameObject.transform.position - collision.transform.position;
 
             gameObject.GetComponent<Rigidbody2D>().AddForce(distance.normalized * 5000 * charge);
@@ -107,7 +105,6 @@ public class PlayerController : MonoBehaviour
     {
         if (charging && Time.time > nextTime)
         {
-            Debug.Log(charge);
             charging = false;
             gameObject.GetComponent<AudioSource>().Play();
             ball.Boost();
@@ -118,6 +115,13 @@ public class PlayerController : MonoBehaviour
     public void SetRopeLength(float r)
     {
         ropeLength = r;
-        ball.GetComponent<BallController>().r = r;
+        ball.defaultR = r;
+
+    }
+
+    public void ResetBall()
+    {
+        ball.Reset();
+        gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 }
